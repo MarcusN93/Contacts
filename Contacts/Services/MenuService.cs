@@ -12,6 +12,10 @@ namespace Contacts.Services
     {
         private static readonly IContactService _contactService = new ContactService();
 
+        /// <summary>
+        /// Shows the main menu with different options for the user.
+        /// Uses a switch case for the options with default handling invalid options
+        /// </summary>
         public static void ShowMainMenu()
         {
             while (true)
@@ -53,7 +57,10 @@ namespace Contacts.Services
         }
 
 
-        // Prompts the user to create a new contact
+        /// <summary>
+        /// Prompts the user to create a new contact 
+        /// Saves the result into a variable that can be used to verify if the contact already exists
+        /// </summary>
         public static void AddContactOption()
         {
 
@@ -79,7 +86,7 @@ namespace Contacts.Services
             Console.Write("Enter what city you live in: ");
             contact.City = Console.ReadLine()!;
 
-            //Saves the result into a variable that can be used to verify if the contact already exists in the if statement below
+            
             var result = _contactService.AddContactToList(contact); 
             if (!result)
             {
@@ -95,7 +102,9 @@ namespace Contacts.Services
             DisplayPressAnyKey();
         }
 
-        //If the list is not empty this function will loop through the list and print them out.
+        /// <summary>
+        /// If the list is not empty this function will loop through the list and print them out.
+        /// </summary>
         private static void ShowAllContacts()
         {
             DisplayMenuTitle("Contact List");
@@ -122,7 +131,9 @@ namespace Contacts.Services
             DisplayPressAnyKey();
         }
 
-        //
+        /// <summary>
+        /// Shows a detailed information about a specific contact by entering the email
+        /// </summary>
         private static void ShowContactDetail()
         {
             try
@@ -130,11 +141,10 @@ namespace Contacts.Services
                 Console.Clear();
                 DisplayMenuTitle("View contact details");
 
-                //Enter the email of the contact to view
+                
                 Console.WriteLine("Enter the email of the contact you wish to view");
                 var email = Console.ReadLine()!.ToUpper();
 
-                //Find the contact
                 var contact = _contactService.GetContactByEmail(email);
                 if (contact != null)
                 {
@@ -147,13 +157,11 @@ namespace Contacts.Services
                     Console.WriteLine($"{contact.Address}");
                     Console.WriteLine($"{contact.City}");
                     Console.WriteLine("=========================");
-
                 }
                 else
                 {
                     Console.Clear();
                     Console.WriteLine("Contact not found");
-
                 }
                 DisplayPressAnyKey();
             }
@@ -167,6 +175,9 @@ namespace Contacts.Services
             }
         }
 
+        /// <summary>
+        /// Deletes a contact from the list by entering the email
+        /// </summary>
         private static void DeleteContact()
         {
             try
@@ -174,11 +185,9 @@ namespace Contacts.Services
                 Console.Clear();
                 DisplayMenuTitle("Delete a contact");
 
-                //Choose what contact to delete
                 Console.WriteLine("Enter the email of the contact you wish to delete");
                 var email = Console.ReadLine()!.ToUpper();
 
-                //Find the contact
                 var contact = _contactService.GetContactByEmail(email);
                 if (contact != null)
                 {
@@ -195,7 +204,6 @@ namespace Contacts.Services
 
                     if (response == "Y")
                     {
-                        //delete the contact
                         Console.Clear();
                         _contactService.RemoveContact(contact);
                         Console.WriteLine("Contact deleted Successfully");
@@ -222,6 +230,9 @@ namespace Contacts.Services
             }
         }
 
+        /// <summary>
+        /// Exits application if user presses on y.
+        /// </summary>
         private static void ExitApplicationOption()
         {
             Console.Clear();
@@ -234,6 +245,10 @@ namespace Contacts.Services
             }
         }
 
+        /// <summary>
+        /// Displays the menutitle.
+        /// </summary>
+        /// <param name="title"> string </param>
         private static void DisplayMenuTitle(string title)
         {
             Console.Clear();
@@ -241,6 +256,9 @@ namespace Contacts.Services
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Displays the Press any key prompt
+        /// </summary>
         private static void DisplayPressAnyKey()
         {
             Console.WriteLine("");

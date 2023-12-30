@@ -13,8 +13,11 @@ namespace Contacts.Shared.Services
         private List<IContact> _contactList = new List<IContact>();
         private readonly string _filePath = @"C:\CSharp-Projects\Contacts\Contacts\Contacts.json";
 
-
-        //This function verifies that the contact does not already exist by comparing email adresses before adding the contact to the list.
+        /// <summary>
+        /// This function verifies that the contact does not already exist by comparing email adresses before adding the contact to the list.
+        /// </summary>
+        /// <param name="contact"> IContact object </param>
+        /// <returns> returns true if contact was added, else returns false </returns>
         public bool AddContactToList(IContact contact)
         {
             try
@@ -33,7 +36,12 @@ namespace Contacts.Shared.Services
             catch (Exception ex) { Debug.WriteLine("ContactService - AddContactToList:: " + ex.Message); }
             return false;
         }
-        //This function gets a contact by comparing email adress and returns the contact
+
+        /// <summary>
+        /// This function gets a contact by comparing email adress and returns the contact
+        /// </summary>
+        /// <param name="email"> string </param>
+        /// <returns> IContact object </returns>
         public IContact GetContactByEmail(string email)
         {
             try
@@ -54,12 +62,16 @@ namespace Contacts.Shared.Services
             return null!;
         }
 
+        /// <summary>
+        /// Gets the contactlist, checks if the list is empty
+        /// </summary>
+        /// <returns> If the list is not empty it returns the list </returns>
         public IEnumerable<IContact> GetContactsFromList()
         {
             try
             {
                 var content = _fileService.GetContentFromFile(_filePath);
-                if (!string.IsNullOrEmpty(content)) //If the list is not empty it returns the list
+                if (!string.IsNullOrEmpty(content))
                 {
                     _contactList = JsonConvert.DeserializeObject<List<IContact>>(content, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All })!;
                     return _contactList;
@@ -69,6 +81,11 @@ namespace Contacts.Shared.Services
             return null!;
         }
 
+        /// <summary>
+        /// find the index in the list that the contact's email is located and then remove the contact located at that index
+        /// </summary>
+        /// <param name="contact"> IContact object </param>
+        /// <returns> returns true if remove was successful, else returns false </returns>
         public bool RemoveContact(IContact contact)
         {
             try
@@ -77,8 +94,8 @@ namespace Contacts.Shared.Services
                 if (!string.IsNullOrEmpty(content))
                 {
                     GetContactsFromList();
-                    int index = _contactList.FindIndex(x => x.Email.Equals(contact.Email, StringComparison.OrdinalIgnoreCase)); //To find the index in the list that the contact's email is located
-                    _contactList.RemoveAt(index);                                                                               //And then remove the contact located at that index
+                    int index = _contactList.FindIndex(x => x.Email.Equals(contact.Email, StringComparison.OrdinalIgnoreCase));
+                    _contactList.RemoveAt(index);
                     string json = JsonConvert.SerializeObject(_contactList, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
                     var result = _fileService.SaveContentToFile(_filePath, json);
                     return result;
