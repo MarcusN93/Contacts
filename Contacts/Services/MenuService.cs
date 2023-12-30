@@ -17,7 +17,6 @@ namespace Contacts.Services
             while (true)
             {
 
-
                 DisplayMenuTitle("MENU OPTIONS");
                 Console.WriteLine($"{"1.",-3} Add New Contact");
                 Console.WriteLine($"{"2.",-3} View Contact List");
@@ -49,16 +48,15 @@ namespace Contacts.Services
                         Console.WriteLine("\nInvalid Option Selected. Please try again");
                         Console.ReadKey();
                         break;
-
-
                 }
-
             }
         }
 
 
+        // Prompts the user to create a new contact
         public static void AddContactOption()
         {
+
             IContact contact = new Contact();
 
             DisplayMenuTitle("Add New Contact");
@@ -69,22 +67,35 @@ namespace Contacts.Services
             Console.Write("Enter your last name: ");
             contact.LastName = Console.ReadLine()!;
 
-            Console.Write("Enter your adress: ");
-            contact.Address = Console.ReadLine()!;
-
-            Console.Write("Enter what city you live in: ");
-            contact.City = Console.ReadLine()!;
-
             Console.Write("Enter your e-mail: ");
             contact.Email = Console.ReadLine()!;
 
             Console.Write("Enter your phone number: ");
             contact.PhoneNumber = Console.ReadLine()!;
 
-            _contactService.AddContactToList(contact);
+            Console.Write("Enter your adress: ");
+            contact.Address = Console.ReadLine()!;
 
+            Console.Write("Enter what city you live in: ");
+            contact.City = Console.ReadLine()!;
+
+            //Saves the result into a variable that can be used to verify if the contact already exists in the if statement below
+            var result = _contactService.AddContactToList(contact); 
+            if (!result)
+            {
+                Console.Clear();
+                Console.WriteLine("A contact with the same email already exists.");
+                Console.WriteLine("The contact was not added to the list.");
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("The contact was added successfully.");
+            }
+            DisplayPressAnyKey();
         }
 
+        //If the list is not empty this function will loop through the list and print them out.
         private static void ShowAllContacts()
         {
             DisplayMenuTitle("Contact List");
@@ -99,18 +110,19 @@ namespace Contacts.Services
                 {
                     foreach (var c in contacts)
                     {
-                        
+
                         Console.WriteLine("========================");
-                        Console.WriteLine($"{c.FirstName} {c.LastName} <{c.Email}>");
-                        Console.WriteLine();
+                        Console.WriteLine($"{c.FirstName} {c.LastName} \n<{c.Email}>");
                     }
+                    Console.WriteLine("========================");
                 }
-                
+
             }
 
             DisplayPressAnyKey();
         }
 
+        //
         private static void ShowContactDetail()
         {
             try
@@ -130,24 +142,28 @@ namespace Contacts.Services
                     Console.WriteLine();
                     Console.WriteLine("=========================");
                     Console.WriteLine($"{contact.FirstName} {contact.LastName}");
-                    Console.WriteLine($"{contact.PhoneNumber}");
                     Console.WriteLine($"{contact.Email}");
+                    Console.WriteLine($"{contact.PhoneNumber}");
                     Console.WriteLine($"{contact.Address}");
                     Console.WriteLine($"{contact.City}");
                     Console.WriteLine("=========================");
-                    DisplayPressAnyKey();
+
                 }
                 else
                 {
+                    Console.Clear();
                     Console.WriteLine("Contact not found");
-                    DisplayPressAnyKey();
+
                 }
+                DisplayPressAnyKey();
             }
-            catch (Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 Debug.WriteLine(ex.Message);
                 Console.WriteLine("An error occurred while viewing the contact information");
-                
+                DisplayPressAnyKey();
+
+
             }
         }
 
@@ -166,37 +182,43 @@ namespace Contacts.Services
                 var contact = _contactService.GetContactByEmail(email);
                 if (contact != null)
                 {
-                    Console.WriteLine("**************************");
+                    Console.Clear();
+                    Console.WriteLine("=========================");
                     Console.WriteLine($"{contact.FirstName} {contact.LastName}");
-                    Console.WriteLine($"{contact.PhoneNumber}");
                     Console.WriteLine($"{contact.Email}");
+                    Console.WriteLine($"{contact.PhoneNumber}");
                     Console.WriteLine($"{contact.Address}");
                     Console.WriteLine($"{contact.City}");
-                    Console.WriteLine("**************************");
+                    Console.WriteLine("=========================");
                     Console.Write("Are you sure you want to delete this contact? (y/n): ");
                     var response = Console.ReadLine()!.ToUpper();
 
                     if (response == "Y")
                     {
                         //delete the contact
+                        Console.Clear();
                         _contactService.RemoveContact(contact);
                         Console.WriteLine("Contact deleted Successfully");
                     }
                     else
                     {
+                        Console.Clear();
                         Console.WriteLine("Something went wrong");
                         Console.WriteLine("Contact was not deleted");
                     }
+                    DisplayPressAnyKey();
                 }
                 else
                 {
                     Console.WriteLine("Contact not found");
+                    DisplayPressAnyKey();
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
                 Console.WriteLine("An error occurred while deleting the contact");
+                DisplayPressAnyKey();
             }
         }
 

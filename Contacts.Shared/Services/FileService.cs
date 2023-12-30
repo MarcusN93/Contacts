@@ -13,6 +13,7 @@ namespace Contacts.Shared.Services
                 {
                     return File.ReadAllText(filePath);
                 }
+                
             }
             catch (Exception ex) { Debug.WriteLine("FileService - GetContentFromFile:: " + ex.Message); }
             return null!;

@@ -1,0 +1,1 @@
+{"$type":"System.Collections.Generic.List`1[[Contacts.Shared.Interfaces.IContact, Contacts.Shared]], System.Private.CoreLib","$values":[{"$type":"Contacts.Shared.Models.Contact, Contacts.Shared","Id":"8b54c447-b316-4dba-8726-533e67b3afb7","FirstName":"John","LastName":"Smith","Email":"john@domain.com","PhoneNumber":"0701234567","Address":"Examplestreet 1","City":"Example City"}]}
